@@ -166,86 +166,36 @@ class SearchView(TemplateView):
         return context
 
 
+class AddToCartView(TemplateView):
+    template_name = "cart.html"
 
-# admin pages
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #getting id of the requested food url
+        food_id = self.kwargs['food_id']
+        #getting the food item
+        food_obj = Food.objects.get(id=food_id)
+        #cart exists or not
+        cart_id= self.request.session.get("cart_id", None)
+        if cart_id:
+            cart_obj = ShoppingCart.objects.get(id=cart_id)
+            this_item = cart_obj.cartproduct_set.filter(food=food_obj)
+            if this_item.exists():
+                cartproduct = this_item.first()
+                cartproduct.quantity += 1
+                cartproduct.subtotal += food_obj.selling_price
+                cartproduct.save
+                cart_obj.total += food_obj.selling_price
+                cart_obj.save()
+            else:
+                cartproduct = CartProduct.objects.create
+        #creates new cart
+        else:
+            cart_obj = ShoppingCart.objects.create(total=0)
+            self.request.session['cart_id'] = cart_obj.id
 
-
-# class AdminLoginView(FormView):
-#     template_name = "adminpages/adminlogin.html"
-#     form_class = CustomerLoginForm
-#     success_url = reverse_lazy("restroapp:adminhome")
-
-#     def form_valid(self, form):
-#         uname = form.cleaned_data.get("username")
-#         pword = form.cleaned_data["password"]
-#         usr = authenticate(username=uname, password=pword)
-#         if usr is not None and Admin.objects.filter(user=usr).exists():
-#             login(self.request, usr)
-#         else:
-#             return render(self.request, self.template_name, {"form": self.form_class, "error": "Invalid credentials"})
-#         return super().form_valid(form)
-
-
-# class AdminRequiredMixin(object):
-#     def dispatch(self, request, *args, **kwargs):
-#         if request.user.is_authenticated and Admin.objects.filter(user=request.user).exists():
-#             pass
-#         else:
-#             return redirect("/admin-login/")
-#         return super().dispatch(request, *args, **kwargs)
-
-
-# class AdminHomeView(AdminRequiredMixin, TemplateView):
-#     template_name = "adminpages/adminhome.html"
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["pendingorders"] = Order.objects.filter(
-#             order_status="Order Received").order_by("-id")
-#         return context
+        
+        #if item is already in cart
 
 
-# class AdminOrderDetailView(AdminRequiredMixin, DetailView):
-#     template_name = "adminpages/adminorderdetail.html"
-#     model = Order
-#     context_object_name = "ord_obj"
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["allstatus"] = ORDER_STATUS
-#         return context
-
-
-# class AdminOrderListView(AdminRequiredMixin, ListView):
-#     template_name = "adminpages/adminorderlist.html"
-#     queryset = Order.objects.all().order_by("-id")
-#     context_object_name = "allorders"
-
-
-# class AdminOrderStatuChangeView(AdminRequiredMixin, View):
-#     def post(self, request, *args, **kwargs):
-#         order_id = self.kwargs["pk"]
-#         order_obj = Order.objects.get(id=order_id)
-#         new_status = request.POST.get("status")
-#         order_obj.order_status = new_status
-#         order_obj.save()
-#         return redirect(reverse_lazy("restroapp:adminorderdetail", kwargs={"pk": order_id}))
-
-
-# class AdminProductListView(AdminRequiredMixin, ListView):
-#     template_name = "adminpages/adminproductlist.html"
-#     queryset = Food.objects.all().order_by("-id")
-#     context_object_name = "allproducts"
-
-
-# class AdminProductCreateView(AdminRequiredMixin, CreateView):
-#     template_name = "adminpages/adminproductcreate.html"
-#     form_class = FoodForm
-#     success_url = reverse_lazy("restroapp:adminproductlist")
-
-#     def form_valid(self, form):
-#         p = form.save()
-#         images = self.request.FILES.getlist("more_images")
-#         for i in images:
-#             FoodImage.objects.create(product=p, image=i)
-#         return super().form_valid(form)
+        return context

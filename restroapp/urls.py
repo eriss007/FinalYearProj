@@ -12,6 +12,7 @@ urlpatterns = [
     path("categories/", CategoriesView.as_view(), name="categories"),
     path("product/<slug:slug>/", FoodDetailView.as_view(), name="fooddetail"),
 
+    path("add-to-cart-<int:food_id>/", AddToCartView.as_view(), name="addtocart"),
 
     path("register/",
          CustomerRegistrationView.as_view(), name="customerregistration"),

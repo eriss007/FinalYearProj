@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h3 class="mt-5">Search Results for <span class="text-warning">"{{request.GET.keyword}}"</span></h3>
+            <h3 class="mt-5">Search Results for <span class="text-dark">"{{request.GET.keyword}}"</span></h3>
             <hr>
             {% for result in results %}
             <div class="row">
@@ -17,7 +17,7 @@
                     <h4><a href="{% url 'restroapp:fooddetail' result.slug %}">{{result.title}}</a></h4>
                     <p>{{result.description|truncatewords:50}}</p>
                     <p>Return Policy: {{result.return_policy}}</p>
-                    <a href="" class="btn">Add To Cart</a>
+                    <a href="{% url 'restroapp:cart' f.id %}" class="btn">Add To Cart</a>
                 </div>
             </div>
             {% endfor %}
