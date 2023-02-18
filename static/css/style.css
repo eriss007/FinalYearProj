@@ -1,0 +1,185 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+:root {
+    --yellow: #FFFEF3;
+    --white: #ffffff;
+    --yellow2:  #D97A0A;
+    --black: #171717;
+    --grey: #454545;
+}
+.erii{
+    font-size: 20px;
+    text-align: center;
+}
+.counter{
+    color: var(--white);
+    overflow: hidden;
+}
+.icon{
+    width: 50%;
+}
+.gradient{
+    background: linear-gradient(90deg, #1B1B1B 40%, #D97A0A 80.34%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 30px;
+}
+.cbtn {
+    border-radius: 50px;
+    padding: 0;
+    height: 30px;
+    width: 30px;
+    margin-right: 15px;
+    border: 1px solid var(--yellow2);
+    justify-content: center;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    background-color: var(--yellow2);
+    color: var(--white);
+}
+.section{
+    padding: 2rem 9%; 
+}
+.home{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    min-height: 20vh;
+    align-items: center;
+}
+/* 
+.home .content{
+    flex: 1 1 40rem;
+    padding-top: 6.5rem;
+} */
+/* .home .image{
+     flex: 1 1 20rem; 
+} */
+.anima{
+    padding: 1rem;
+    animation: float 3s linear infinite;
+}
+@keyframes float{
+    0%, 100%{
+        transform: translateY(0rem);
+    }
+    50%{
+        transform: translateY(3rem);
+    }
+}
+h3{
+    font-size: 50px;
+    color: var(--yellow2);
+}
+.price{
+
+    font-family: 'Poppins', sans-serif;
+    color: var(--yellow2);
+    font-weight: 600;
+}
+.price .point{
+    font-weight: 500;
+}
+.tes{
+    color: var(--yellow2) ;
+}
+.card-text{
+    font-size: 12px;
+    color: var(--grey);
+    font-family: 'Poppins', sans-serif;
+}
+.card-title{
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+}
+.card-body{
+    font-family: 'Poppins', sans-serif;
+}
+.carousel-next-icon, .carousel-prev-icon{
+    color: var(--yellow2);
+    font-size: 40px;
+    font-weight: 400;
+}
+.cards{
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+    border: .1rem solid rgba(0,0,0,.3);
+    cursor: pointer;
+}
+.card{
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+    border: .1rem solid rgba(0,0,0,.3);
+    cursor: pointer;
+}
+
+
+.heading{
+    text-align: center;
+    font-size: 3.5rem;
+    padding: 1rem;
+    color: #666;
+}
+
+.heading span{
+    color: var(--yellow2);
+}
+
+
+.view{
+    color: var(--white);
+    background-color: var(--black);
+    text-decoration: none;
+    
+}
+
+.view:hover{
+    color: var(--white);
+    background-color: var(--yellow2);
+    border: 1px solid var(--yellow2);
+}
+
+.view_btn{
+    text-decoration: none;
+}
+
+.addToCartBtn{
+    color: var(--white);
+    background-color: var(--black);
+    text-decoration: none;
+    
+}
+
+.addToCartBtn:hover{
+    color: var(--white);
+    background-color: var(--yellow2);
+    border: 1px solid var(--yellow2);
+}
+
+.food_heading{
+    font-size: 30px;
+    font-family: 'Poppins';
+    font-weight: 550;
+}
+
+.return{
+    color: var(--yellow2);
+}
+html { height: 100%; } 
+body { min-height: 100%; } 
+
+.regbtn{
+    color: var(--white);
+    background-color: var(--black);
+    text-decoration: none;
+}
+
+.footerstyle {
+    color: var(--white);
+  } 

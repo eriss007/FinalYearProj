@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}{{food.title}}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- <h3 class="mt-3">{{food.title}}</h3><hr> -->
+    <div class="row mt-5">
+        <div class="col-md-5">
+            <img src="{{food.image.url}}" alt="" class="img-fluid"
+                style=" height: 550px; width: 500px; object-fit: cover;">
+            <div class="row">
+                {% for fi in food.foodimage_set.all %}
+                <div class="col-md-4 p-3">
+                    <a href="{{fi.image.url}}" target="_blank">
+                        <img src="{{fi.image.url}}" class="img-fluid" style="height: 100px; object-fit: contain;"
+                            alt="">
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h2 class="food_heading">{{food.title}}</h2>
+            <h5>Description</h5>
+            <p>{{food.description}}</p>
+            <h5 class="price">
+                Rs. {{food.selling_price}}<small class="point">.00</small>
+            </h5>
+            <h5>Category: {{food.category}}</h5>
+
+            <a href="#" class="btn addToCartBtn">Add To Cart</a>
+            <hr>
+            <p class="return">Return Policy: {{food.return_policy}}</p>
+            <hr>
+        </div>
+    </div>
+</div>
+{% endblock %}

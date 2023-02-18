@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<body class="">
+  <main>
+    <!--carousel start -->
+    <div id="carousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="{% static 'images/sm-dump.jpg' %}" class="d-block img-fluid w-100 slide-img" alt="..." />
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'images/pasta.jpg' %}" class="d-block img-fluid w-100" alt="..." />
+        </div>
+        <div class="carousel-item">
+          <img src="{% static 'images/sm-momo.jpg' %}" class="d-block img-fluid w-100" alt="..." />
+        </div>
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+        <span class="carousel-prev-icon" aria-hidden="true"><i class="bi bi-chevron-compact-left"></i></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+        <span class="carousel-next-icon" aria-hidden="true"><i class="bi bi-chevron-compact-right"></i></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <!-- carousel end -->
+
+
+    <h1 class="erii gradient mt-5 mb-3 heading">Our Products</h1>
+    <div class="container">
+
+      <div class="row g-3 gx-5 mt-5 mb-5 card-group">
+        <!-- for loop to display cards simultaneously -->
+        {% for f in food_list %}
+        <div class="col-12 col-md-6 col-lg-3 col xl-3">
+          <div class="card h-100">
+            <img src="{{f.image.url}}" alt="" class="img-fluid" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+              <h5 class="card-title">{{f.title}}</a></h5>
+              <p class="card-text">{{f.description}}</p>
+              <div class="row">
+                <p class="price col">
+                  Rs. {{f.selling_price}}<small class="point">.00</small>
+                </p>
+                <button class="cbtn">
+                  +
+                </button>
+              </div>
+              <a href="{% url 'restroapp:fooddetail' f.slug %}" style="text-decoration: none;"
+                class="card-title btn view col-12">View More</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+
+
+      <!-- about section  -->
+
+      <div class="row">
+        <div class="col">
+          <div class="container text-center">
+            <div class="row mt-5 mb-5  g-5">
+              <div class="col mb-5 align-self-end">
+                One of three columns1
+              </div>
+              <div class="row mt-5 mb-5 align-self-center">
+                One of three columns2
+              </div>
+              <div class="col mb-5 align-self-end">
+                One of three columns3
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="image">
+            <img src="{% static 'images/about.png' %}" alt="Food" class="anima" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="container text-center">
+            <div class="row mt-5 mb-5  g-5">
+              <div class="row mt-5 mb-5 align-self-start">
+                One of three columns1
+              </div>
+              <div class="col mt-5 mb-5 align-self-center">
+                One of three columns2
+              </div>
+              <div class="row mt-5 mb-5 align-self-start">
+                One of three columns3
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- about section ends  -->
+
+    </div>
+  </main>
+</body>
+
+
+{% endblock %}

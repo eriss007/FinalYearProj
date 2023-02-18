@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1 class="erii gradient mt-5 mb-3 heading">Our Products</h1>
+  <div class="container">
+
+    <div class="row g-3 gx-5 mt-5 mb-5 card-group">
+      <!-- for loop to display cards simultaneously -->
+      {% for f in food_list %}
+      <div class="col-12 col-md-6 col-lg-3 col xl-3">
+        <div class="card h-100">
+          <img src="{{f.image.url}}" alt="" class="img-fluid" style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title">{{f.title}}</a></h5>
+            <p class="card-text">{{f.description}}</p>
+            <div class="row">
+              <p class="price col">
+                Rs. {{f.selling_price}}<small class="point">.00</small>
+              </p>
+              <button class="cbtn">
+                +
+              </button>
+            </div>
+            <a href="{% url 'restroapp:fooddetail' f.slug %}" style="text-decoration: none;"
+              class="card-title btn view col-12">View More</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <nav aria-label="...">
+      <ul class="pagination justify-content-end">
+        {% if food_list.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ food_list.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for i in food_list.paginator.page_range %}
+        {% if i == food_list.number %}
+        <li class="page-item active"><a class="page-link">{{i}}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if food_list.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ food_list.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav> 
+</div>
+{% endblock %}

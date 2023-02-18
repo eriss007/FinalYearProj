@@ -1,0 +1,29 @@
+from django.urls import path
+from .views import *
+
+
+app_name = "restroapp"
+urlpatterns = [
+
+    # Client side pages
+    path("", HomeView.as_view(), name="home"),
+    path("about/", AboutView.as_view(), name="about"),
+    path("allfood/", AllFoodView.as_view(), name="allfood"),
+    path("categories/", CategoriesView.as_view(), name="categories"),
+    path("product/<slug:slug>/", FoodDetailView.as_view(), name="fooddetail"),
+
+
+    path("register/",
+         CustomerRegistrationView.as_view(), name="customerregistration"),
+
+    path("logout/", CustomerLogoutView.as_view(), name="customerlogout"),
+    path("login/", CustomerLoginView.as_view(), name="customerlogin"),
+
+    path("profile/", CustomerProfileView.as_view(), name="customerprofile"),
+#     path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(),
+#          name="customerorderdetail"),
+
+    path("search/", SearchView.as_view(), name="search"),
+
+
+]
