@@ -29,7 +29,7 @@
             </h5>
             <h5>Category: {{food.category}}</h5>
 
-            <a href="{% url 'restroapp:cart' food.id %}" class="btn addToCartBtn">Add To Cart</a>
+            <a href="{% url 'restroapp:addtocart' food.id %}" class="btn addToCartBtn">Add To Cart</a>
             <hr>
             <p class="return">Return Policy: {{food.return_policy}}</p>
             <hr>

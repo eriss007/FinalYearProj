@@ -204,3 +204,19 @@ class AddToCartView(TemplateView):
             cart_obj.save()
 
         return context
+
+    
+class MyCartView(TemplateView):
+        template_name="usercart.html"
+
+        def get_context_data(self, **kwargs):
+            context = super().get_context_data(**kwargs)
+            #checking if we already have card in current session/using cart id as session key/dictionary
+            cart_id = self.request.session.get("cart_id", None)
+            #condition for if it exists
+            if cart_id:
+                cart = ShoppingCart.objects.get(id=cart_id)
+            else:
+                cart = None
+            context['cart'] = cart
+            return context
