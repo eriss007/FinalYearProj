@@ -22,7 +22,7 @@ class restroMixin(object):
         return super().dispatch(request, *args, **kwargs)
 
 
-class HomeView(restroMixin, TemplateView):
+class HomeView(TemplateView):
     template_name = "home.html"
 
     #returning context (sending data from backend to frontend) displaying food cards
@@ -36,7 +36,7 @@ class HomeView(restroMixin, TemplateView):
         context['food_list'] = food_list
         return context
 
-class AllFoodView(restroMixin, TemplateView):
+class AllFoodView(TemplateView):
     template_name = "allfood.html"
 
         #returning context (sending data from backend to frontend) displaying food cards
@@ -51,7 +51,7 @@ class AllFoodView(restroMixin, TemplateView):
         return context
 
 
-class CategoriesView(restroMixin, TemplateView):
+class CategoriesView(TemplateView):
     template_name = "categories.html"
 
     def get_context_data(self, **kwargs):
@@ -60,7 +60,7 @@ class CategoriesView(restroMixin, TemplateView):
         return context
 
 
-class FoodDetailView(restroMixin, TemplateView):
+class FoodDetailView(TemplateView):
     template_name = "fooddetail.html"
 
     def get_context_data(self, **kwargs):
@@ -126,11 +126,11 @@ class CustomerLoginView(FormView):
             return self.success_url
 
 
-class AboutView(restroMixin, TemplateView):
+class AboutView(TemplateView):
     template_name = "about.html"
 
 
-class ContactView(restroMixin, TemplateView):
+class ContactView(TemplateView):
     template_name = "contactus.html"
 
 
@@ -180,22 +180,27 @@ class AddToCartView(TemplateView):
         if cart_id:
             cart_obj = ShoppingCart.objects.get(id=cart_id)
             this_item = cart_obj.cartproduct_set.filter(food=food_obj)
+            #this works when the items already exist in cart
             if this_item.exists():
                 cartproduct = this_item.first()
                 cartproduct.quantity += 1
                 cartproduct.subtotal += food_obj.selling_price
-                cartproduct.save
+                cartproduct.save()
                 cart_obj.total += food_obj.selling_price
                 cart_obj.save()
+            #this works when th item does not exist in cart
             else:
-                cartproduct = CartProduct.objects.create
+                cartproduct = CartProduct.objects.create(
+                    cart=cart_obj, food=food_obj, rate=food_obj.selling_price, quantity=1, subtotal=food_obj.selling_price )
+                cart_obj.total += food_obj.selling_price
+                cart_obj.save()
         #creates new cart
         else:
             cart_obj = ShoppingCart.objects.create(total=0)
             self.request.session['cart_id'] = cart_obj.id
-
-        
-        #if item is already in cart
-
+            cartproduct = CartProduct.objects.create(
+                cart=cart_obj, food=food_obj, rate=food_obj.selling_price, quantity=1, subtotal=food_obj.selling_price )
+            cart_obj.total += food_obj.selling_price
+            cart_obj.save()
 
         return context
