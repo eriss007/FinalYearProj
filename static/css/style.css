@@ -184,3 +184,10 @@ body { min-height: 100%; }
 .footerstyle {
     color: var(--white);
   } 
+
+.counter{
+    color: var(--white);
+}
+.icon{
+    width: 50%;
+}
