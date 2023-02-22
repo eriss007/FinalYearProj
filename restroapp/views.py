@@ -29,7 +29,7 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         all_foods = Food.objects.all().order_by("-id")
-        paginator = Paginator(all_foods, 4)
+        paginator = Paginator(all_foods, 8)
         page_number = self.request.GET.get('page')
         print(page_number)
         food_list = paginator.get_page(page_number)
@@ -220,3 +220,12 @@ class MyCartView(TemplateView):
                 cart = None
             context['cart'] = cart
             return context
+
+class ManageCartView(View):
+    def get_context_data(self, **kwargs):
+        print("i need to sleep")
+        cp_id = self.kwargs["cp_id"]
+        action = request.Get.get("action")
+        print(cp_id, action)
+        return redirect("restromapp:usercart")
+

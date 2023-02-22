@@ -21,7 +21,7 @@
             <p class="price col">
               Rs. {{f.selling_price}}<small class="point">.00</small>
             </p>
-            <a class="cbtn" href="{% url 'restroapp:addtocart' f.id %}">
+            <a class="cbtn" href="{% url 'restroapp:addtocart' f.id %}" onclick="alert('product added to cart!');return; false;" style="text-decoration: none;">
               +
             </a>
           </div>

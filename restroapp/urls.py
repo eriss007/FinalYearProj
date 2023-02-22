@@ -27,6 +27,7 @@ urlpatterns = [
     path("search/", SearchView.as_view(), name="search"),
 
     path("my-cart/", MyCartView.as_view(), name="usercart"),
+    path("manage-cart/<int:cp_id>", ManageCartView.as_view(), name="managecart"),
 
 
 ]

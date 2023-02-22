@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            <h4>Items in my cart</h4><hr>
+            <h4 class="mt-5">My Cart</h4><hr>
             <table class="table">
                 <thead>
                     <tr>
@@ -26,8 +26,17 @@
                         <td>{{cp.rate}}</td>
                         <td>{{cp.quantity}}</td>
                         <td>{{cp.subtotal}}</td>
+                        <td>
+                            <a href="{% url 'restroapp:managecart' cp.id %}?action=inc" class="btn view">+</a>
+                            <a href="{% url 'restroapp:managecart' cp.id %}?action=dcr" class="btn view">-</a>
+                            <a href="{% url 'restroapp:managecart' cp.id %}?action=rmv" class="btn btn-danger">Delete</a>
+                        </td>
                     </tr>
                     {% endfor %}
+                    <tr>
+                        <th colspan="4" class="text-right">Total:</th>
+                        <th>Rs. {{cart.total}}</th>
+                    </tr>
                 </tbody>
             </table>
         </div>

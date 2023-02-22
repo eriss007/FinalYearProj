@@ -41,13 +41,7 @@
             <a class="nav-link" href="{% url 'restroapp:home' %}">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'restroapp:allfood' %}">All Items</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'restroapp:categories' %}">Categories</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'restroapp:about' %}">About</a>
+            <a class="nav-link" href="{% url 'restroapp:categories' %}">Our Menu</a>
           </li>
         </ul>
         <form class="d-flex" action="{% url 'restroapp:search' %}" method="GET">
@@ -59,13 +53,13 @@
         <ul class="navbar-nav">
           {% if request.user.customer %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'restroapp:customerprofile' %}">My Profile</a>
+            <a class="nav-link" href="{% url 'restroapp:customerprofile' %}"><i class="bi bi-person-circle"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'restroapp:usercart' %}"><i class="bi bi-cart-fill"></i></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'restroapp:customerlogout' %}">Logout</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'restroapp:usercart' %}">My Cart</a>
           </li>
           {% else %}
           <li class="nav-item">
@@ -98,13 +92,10 @@
           <a href="{% url 'restroapp:home' %}" class="nav-link px-2 text-white">Home</a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'restroapp:allfood' %}" class="nav-link px-2 text-white">All Items</a>
+          <a href="{% url 'restroapp:allfood' %}" class="nav-link px-2 text-white">Menu</a>
         </li>
         <li class="nav-item">
           <a href="{% url 'restroapp:categories' %}" class="nav-link px-2 text-white">Categories</a>
-        </li>
-        <li class="nav-item">
-          <a href="{% url 'restroapp:about' %}" class="nav-link px-2 text-white">About</a>
         </li>
       </ul>
     </footer>
