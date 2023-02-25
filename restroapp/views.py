@@ -218,22 +218,37 @@ class MyCartView(TemplateView):
             context['cart'] = cart
             return context
 
-# class ManageCartView(View):
-#     def get_context_data(self, **kwargs):
-#         print("i need to sleep")
-#         cp_id = self.kwargs["cp_id"]
-#         action = request.Get.get("action")
-#         print(cp_id, action)
-#         return redirect("restromapp:usercart")
-
 class ManageCartView(View):
     def get(self, request, *args, **kwargs):
-        print("i need to sleep")
         cp_id = self.kwargs["cp_id"]
-        print(cp_id)
         #action is the button parameters achieved through get methods
         action = request.GET.get("action")
-        print(cp_id, action)
+        cp_obj = CartProduct.objects.get(id = cp_id)
+        cart_obj = cp_obj.cart
+
+        #adding new item and its details to cart
+        if action == "add":
+            cp_obj.quantity += 1
+            cp_obj.subtotal += cp_obj.rate
+            cp_obj.save()
+            cart_obj.total += cp_obj.rate
+            cart_obj.save()
+        #subtracting existing item and its details to cart
+        elif action == "sub":
+            cp_obj.quantity -= 1
+            cp_obj.subtotal -= cp_obj.rate
+            cp_obj.save()
+            cart_obj.total -= cp_obj.rate
+            cart_obj.save()
+            if cp_obj.quantity == 0:
+                cp_obj.delete()
+        #deleting existting item and its details to cart
+        elif action == "del":
+            cart_obj.total -= cp_obj.subtotal
+            cart_obj.save()
+            cp_obj.delete()
+        else:
+            pass
         return redirect("restroapp:usercart")
 
 

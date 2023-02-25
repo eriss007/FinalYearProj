@@ -27,9 +27,10 @@
                         <td>{{cp.quantity}}</td>
                         <td>{{cp.subtotal}}</td>
                         <td>
-                            <a href="{% url 'restroapp:managecart' cp.id %}?action=inc" class="btn view">+</a>
-                            <a href="{% url 'restroapp:managecart' cp.id %}?action=dcr" class="btn view">-</a>
-                            <a href="{% url 'restroapp:managecart' cp.id %}?action=rmv" class="btn btn-danger">Delete</a>
+                            <!-- requires dynamic id of cart product obj which retrives cart product -->
+                            <a href="{% url 'restroapp:managecart' cp.id %}?action=add" class="btn view">+</a>
+                            <a href="{% url 'restroapp:managecart' cp.id %}?action=sub" class="btn view">-</a>
+                            <a href="{% url 'restroapp:managecart' cp.id %}?action=del" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                     {% endfor %}
