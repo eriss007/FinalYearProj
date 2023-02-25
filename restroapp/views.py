@@ -11,15 +11,15 @@ from .forms import *
 import requests
 
 
-class restroMixin(object):
-    def dispatch(self, request, *args, **kwargs):
-        cart_id = request.session.get("cart_id")
-        if cart_id:
-            cart_obj = ShoppingCart.objects.get(id=cart_id)
-            if request.user.is_authenticated and request.user.customer:
-                cart_obj.customer = request.user.customer
-                cart_obj.save()
-        return super().dispatch(request, *args, **kwargs)
+# class restroMixin(object):
+#     def dispatch(self, request, *args, **kwargs):
+#         cart_id = request.session.get("cart_id")
+#         if cart_id:
+#             cart_obj = ShoppingCart.objects.get(id=cart_id)
+#             if request.user.is_authenticated and request.user.customer:
+#                 cart_obj.customer = request.user.customer
+#                 cart_obj.save()
+#         return super().dispatch(request, *args, **kwargs)
 
 
 class HomeView(TemplateView):
@@ -31,7 +31,6 @@ class HomeView(TemplateView):
         all_foods = Food.objects.all().order_by("-id")
         paginator = Paginator(all_foods, 8)
         page_number = self.request.GET.get('page')
-        print(page_number)
         food_list = paginator.get_page(page_number)
         context['food_list'] = food_list
         return context
@@ -45,7 +44,6 @@ class AllFoodView(TemplateView):
         all_foods = Food.objects.all().order_by("-id")
         paginator = Paginator(all_foods, 12)
         page_number = self.request.GET.get('page')
-        print(page_number)
         food_list = paginator.get_page(page_number)
         context['food_list'] = food_list
         return context
@@ -161,7 +159,6 @@ class SearchView(TemplateView):
         kw = self.request.GET.get("keyword")
         results = Food.objects.filter(
             Q(title__icontains=kw) | Q(description__icontains=kw) | Q(return_policy__icontains=kw) | Q(category__title__icontains=kw))
-        print(results)
         context["results"] = results
         return context
 
@@ -221,11 +218,22 @@ class MyCartView(TemplateView):
             context['cart'] = cart
             return context
 
+# class ManageCartView(View):
+#     def get_context_data(self, **kwargs):
+#         print("i need to sleep")
+#         cp_id = self.kwargs["cp_id"]
+#         action = request.Get.get("action")
+#         print(cp_id, action)
+#         return redirect("restromapp:usercart")
+
 class ManageCartView(View):
-    def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
         print("i need to sleep")
         cp_id = self.kwargs["cp_id"]
-        action = request.Get.get("action")
+        print(cp_id)
+        #action is the button parameters achieved through get methods
+        action = request.GET.get("action")
         print(cp_id, action)
-        return redirect("restromapp:usercart")
+        return redirect("restroapp:usercart")
+
 
