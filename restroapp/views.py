@@ -9,6 +9,7 @@ from django.db.models import Q
 from .models import *
 from .forms import *
 import requests
+from django.http import HttpResponseRedirect
 
 
 # class restroMixin(object):
@@ -200,6 +201,8 @@ class AddToCartView(TemplateView):
             cart_obj.total += food_obj.selling_price
             cart_obj.save()
 
+        # return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+
         return context
 
     
@@ -220,6 +223,7 @@ class MyCartView(TemplateView):
 
 class ManageCartView(View):
     def get(self, request, *args, **kwargs):
+        #self.kwargs is used to use dynamic id
         cp_id = self.kwargs["cp_id"]
         #action is the button parameters achieved through get methods
         action = request.GET.get("action")
@@ -249,6 +253,17 @@ class ManageCartView(View):
             cp_obj.delete()
         else:
             pass
+        return redirect("restroapp:usercart")
+
+class EmptyCartView(View):
+    def get(self, request, *args, **kwargs):
+        cart_id = request.session.get("cart_id", None)
+        if cart_id:
+            cart = ShoppingCart.objects.get(id=cart_id)
+            #This accesses all cart products from cart models
+            cart.cartproduct_set.all().delete()
+            cart.total = 0
+            cart.save()
         return redirect("restroapp:usercart")
 
 

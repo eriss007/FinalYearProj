@@ -37,6 +37,10 @@
                     <tr>
                         <th colspan="4" class="text-right">Total:</th>
                         <th>Rs. {{cart.total}}</th>
+                        <!-- ensures that cart is not empty before showing the option -->
+                        {% if cart.cartproduct_set.all %}
+                        <th><a href="{% url 'restroapp:emptycart' %}">Empty Cart</a></th>
+                        {% endif %}
                     </tr>
                 </tbody>
             </table>
