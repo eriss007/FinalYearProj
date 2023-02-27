@@ -6,10 +6,10 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.conf import settings
 from django.db.models import Q
-from .models import *
-from .forms import *
 import requests
 from django.http import HttpResponseRedirect
+from .models import *
+from .forms import *
 
 
 # class restroMixin(object):
@@ -265,5 +265,42 @@ class EmptyCartView(View):
             cart.total = 0
             cart.save()
         return redirect("restroapp:usercart")
+
+class CheckoutView(CreateView):
+    template_name = "checkout.html"
+    form_class = CheckoutForm
+    success_url = reverse_lazy("restroapp:home")
+    #to send cart info to checkout page to display items
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart_id = self.request.session.get("cart_id", None)
+        if cart_id:
+            cart_obj = ShoppingCart.objects.get(id=cart_id)
+        else: 
+            cart_obj = None
+        context['cart'] = cart_obj
+        return context
+    #
+    def form_valid(self, form):
+        cart_id = self.request.session.get("cart_id")
+        if cart_id:
+            cart_obj = ShoppingCart.objects.get(id=cart_id)
+            print("hel0")
+            form.instance.cart = cart_obj
+            print("hel0")
+            form.instance.subtotal = cart_obj.total
+            print("hel0")
+            form.instance.discount = 0
+            print("hel0")
+            form.instance.total = cart_obj.total
+            print("hel0")
+            form.instance.order_status = "Order Received"
+            print("hel0")
+            del self.request.session['cart_id']
+            print("hel0")
+        else:
+            return redirect("restroapp:home")
+        return super().form_valid(form)
+        
 
 

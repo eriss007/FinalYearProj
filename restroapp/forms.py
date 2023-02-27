@@ -2,7 +2,7 @@ from django import forms
 from .models import Order, Customer, Food
 from django.contrib.auth.models import User
 
-
+#creating orders obj to save it to db 
 class CheckoutForm(forms.ModelForm):
     class Meta:
         model = Order

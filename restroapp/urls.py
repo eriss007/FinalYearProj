@@ -21,8 +21,6 @@ urlpatterns = [
     path("login/", CustomerLoginView.as_view(), name="customerlogin"),
 
     path("profile/", CustomerProfileView.as_view(), name="customerprofile"),
-#     path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(),
-#          name="customerorderdetail"),
 
     path("search/", SearchView.as_view(), name="search"),
 
@@ -30,5 +28,6 @@ urlpatterns = [
     path("manage-cart/<int:cp_id>", ManageCartView.as_view(), name="managecart"),
     path("empty-cart/", EmptyCartView.as_view(), name="emptycart"),
 
+    path("checkout/", CheckoutView.as_view(), name="checkout"),
 
 ]
