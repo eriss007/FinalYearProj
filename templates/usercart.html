@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            <h4 class="mt-5">My Cart</h4><hr>
+            <h4 class="mt-5"><i class="bi bi-cart-fill"></i> My Cart</h4><hr>
             <table class="table">
                 <thead>
                     <tr>
@@ -30,7 +30,7 @@
                             <!-- requires dynamic id of cart product obj which retrives cart product -->
                             <a href="{% url 'restroapp:managecart' cp.id %}?action=add" class="btn view">+</a>
                             <a href="{% url 'restroapp:managecart' cp.id %}?action=sub" class="btn view">-</a>
-                            <a href="{% url 'restroapp:managecart' cp.id %}?action=del" class="btn btn-danger">Delete</a>
+                            <a href="{% url 'restroapp:managecart' cp.id %}?action=del" class="btn btn-outline-danger">Delete</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -39,12 +39,12 @@
                         <th>Rs. {{cart.total}}</th>
                         <!-- ensures that cart is not empty before showing the option -->
                         {% if cart.cartproduct_set.all %}
-                        <th><a href="{% url 'restroapp:emptycart' %}">Empty Cart</a></th>
+                        <th><a href="{% url 'restroapp:emptycart' %}" class="btn btn-danger">Empty Cart</a></th>
                         {% endif %}
                     </tr>
                     {% if cart.cartproduct_set.all %}
                     <tr>
-                        <th><a href="{% url 'restroapp:checkout' %}">Checkout</a></th>
+                        <th><a href="{% url 'restroapp:checkout' %}" class="btn view">Checkout</a></th>
                     </tr>
                     {% endif %}
                 </tbody>

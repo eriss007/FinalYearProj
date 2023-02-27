@@ -285,19 +285,12 @@ class CheckoutView(CreateView):
         cart_id = self.request.session.get("cart_id")
         if cart_id:
             cart_obj = ShoppingCart.objects.get(id=cart_id)
-            print("hel0")
             form.instance.cart = cart_obj
-            print("hel0")
             form.instance.subtotal = cart_obj.total
-            print("hel0")
             form.instance.discount = 0
-            print("hel0")
             form.instance.total = cart_obj.total
-            print("hel0")
             form.instance.order_status = "Order Received"
-            print("hel0")
             del self.request.session['cart_id']
-            print("hel0")
         else:
             return redirect("restroapp:home")
         return super().form_valid(form)

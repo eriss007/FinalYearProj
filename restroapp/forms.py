@@ -8,6 +8,32 @@ class CheckoutForm(forms.ModelForm):
         model = Order
         fields = ["ordered_by", "shipping_address",
                   "mobile", "email", "payment_method"]
+        widgets = {
+            "ordered_by": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter your Name...",
+                "style": "width:300px; " ,
+                "class": "form-control",
+            }),
+            "shipping_address": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter your Address...",
+                "style": "width:300px",
+                "class": "form-control",
+            }),
+            "mobile": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter your Number...",
+                "style": "width:300px",
+                "class": "form-control",
+            }),
+            "email": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter your Email...",
+                "style": "width:300px",
+                "class": "form-control",
+            }),
+        }
 
 
 class CustomerRegistrationForm(forms.ModelForm):
