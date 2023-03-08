@@ -30,4 +30,8 @@ urlpatterns = [
 
     path("checkout/", CheckoutView.as_view(), name="checkout"),
 
+    path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(), name="customerorderdetail"),
+
+        path("admin-login/", AdminLoginView.as_view(), name="adminlogin"),
+
 ]

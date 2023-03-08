@@ -140,7 +140,7 @@ class ContactView(restroMixin,TemplateView):
 
 class CustomerProfileView(TemplateView):
     template_name = "customerprofile.html"
-
+    #customer must be logged in to check this
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated and Customer.objects.filter(user=request.user).exists():
             pass
@@ -309,6 +309,22 @@ class CheckoutView(restroMixin, CreateView):
         else:
             return redirect("restroapp:home")
         return super().form_valid(form)
-        
+
+class CustomerOrderDetailView(DetailView):
+    template_name = "customerorderdetail.html"
+    model = Order
+    context_obj_name = "ord_obj"
+
+    #customer must be logged in to check this
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.customer:
+            pass
+        else:
+            return redirect("/login/?next=/profile/")
+        return super().dispatch(request, *args, **kwargs)
 
 
+class AdminLoginView(FormView):
+    template_name = "admin/adminlogin.html"
+    form_class = CustomerLoginForm
+    success_url = reverse_lazy("restroapp:adminhome")
