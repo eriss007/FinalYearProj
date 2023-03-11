@@ -328,3 +328,6 @@ class AdminLoginView(FormView):
     template_name = "admin/adminlogin.html"
     form_class = CustomerLoginForm
     success_url = reverse_lazy("restroapp:adminhome")
+
+class AdminHomeView(TemplateView):
+    template_name = "admin/adminhome.html"
