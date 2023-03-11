@@ -107,7 +107,7 @@ class CustomerLoginView(FormView):
     form_class = CustomerLoginForm
     success_url = reverse_lazy("restroapp:home")
 
-    # form_valid method is a type of post method and is available in createview formview and updateview
+    # form_valid method is a type of post method + available in createview formview and updateview
     def form_valid(self, form):
         uname = form.cleaned_data.get("username")
         pword = form.cleaned_data["password"]
@@ -142,6 +142,7 @@ class CustomerProfileView(TemplateView):
     template_name = "customerprofile.html"
     #customer must be logged in to check this
     def dispatch(self, request, *args, **kwargs):
+        #since usr is not a variable you need to request it
         if request.user.is_authenticated and Customer.objects.filter(user=request.user).exists():
             pass
         else:
@@ -317,7 +318,7 @@ class CustomerOrderDetailView(DetailView):
 
     #customer must be logged in to check this
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.customer:
+        if request.user.is_authenticated and Customer.objects.filter(user=request.user).exists():
             pass
         else:
             return redirect("/login/?next=/profile/")
@@ -329,5 +330,38 @@ class AdminLoginView(FormView):
     form_class = CustomerLoginForm
     success_url = reverse_lazy("restroapp:adminhome")
 
+    def form_valid(self, form):
+        #fetching uname and pwword of admin 
+        uname = form.cleaned_data.get("username")
+        pword = form.cleaned_data["password"]
+        usr = authenticate(username=uname, password=pword)
+        if usr is not None and Admin.objects.filter(user=usr).exists():
+            login(self.request, usr)
+        else:
+            return render(self.request, self.template_name, {"form": self.form_class, "error": "Invalid credentials"})
+
+        return super().form_valid(form)
+
 class AdminHomeView(TemplateView):
     template_name = "admin/adminhome.html"
+
+    #restricting customers from viewing this page (or not logged in admins)
+    #trying to access the admin page while logged in as a user will take them to admin login page
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and Admin.objects.filter(user=request.user).exists():
+            pass
+        else:
+            return redirect("/admin-login/")
+        return super().dispatch(request, *args, **kwargs)
+
+    #sending data to html page
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(*kwargs)
+        context["pendingorders"] = Order.objects.filter(order_status = "Order Received")
+        return context
+
+    class AdminOrderdetailView(DetailView):
+        template_name = "admin/adminhome.html"
+        model = Order
+        context_object_name = "order_obj"
+        
