@@ -378,10 +378,27 @@ class AdminOrderdetailView(AdminRequiredMixin, DetailView):
     model = Order
     context_object_name = "ord_obj"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["allstatus"] = ORDER_STATUS
+        return context
+
 class AdminOrderListView(AdminRequiredMixin, ListView):
     template_name = "admin/adminorderlist.html"
     queryset = Order.objects.all().order_by("-id")
     context_object_name = "allorders"
+
+class AdminStatusChangeView(AdminRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        order_id = self.kwargs["pk"]
+        order_obj = Order.objects.get(id=order_id)
+        #getting new status data from fe to be
+        new_status = request.POST.get("status")
+        #changing value from old to new
+        order_obj.order_status = new_status
+        order_obj.save()
+        return redirect(reverse_lazy("restroapp:adminorderdetail", kwargs={"pk": order_id}))
+        
 
 
  
