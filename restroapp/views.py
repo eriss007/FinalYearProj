@@ -73,6 +73,17 @@ class FoodDetailView(restroMixin, TemplateView):
         context['food'] = product
         return context
 
+    def Review_rate(request):
+        if request.method == "GET":
+            food_id = request.GET.get('food_id')
+            food = Food.objects.get(id=food_id)
+            comment = request.GET.get('comment')
+            rate = request.GET.get('rate')
+            user = request.user
+            Review(user=user, food=food, comment=comment, rate=rate).save()
+            return redirect('food_detail', id=food_id)
+
+
 
 class CustomerRegistrationView(CreateView):
     template_name = "customerregistration.html"
@@ -342,9 +353,8 @@ class AdminLoginView(FormView):
 
         return super().form_valid(form)
 
-class AdminHomeView(TemplateView):
-    template_name = "admin/adminhome.html"
-
+#making sure only admin can view the page
+class AdminRequiredMixin(object):
     #restricting customers from viewing this page (or not logged in admins)
     #trying to access the admin page while logged in as a user will take them to admin login page
     def dispatch(self, request, *args, **kwargs):
@@ -354,14 +364,25 @@ class AdminHomeView(TemplateView):
             return redirect("/admin-login/")
         return super().dispatch(request, *args, **kwargs)
 
+class AdminHomeView(AdminRequiredMixin, TemplateView):
+    template_name = "admin/adminhome.html"
+
     #sending data to html page
     def get_context_data(self, **kwargs):
         context = super().get_context_data(*kwargs)
-        context["pendingorders"] = Order.objects.filter(order_status = "Order Received")
+        context["pendingorders"] = Order.objects.filter(order_status = "Order Received").order_by("-id")
         return context
 
-    class AdminOrderdetailView(DetailView):
-        template_name = "admin/adminhome.html"
-        model = Order
-        context_object_name = "order_obj"
+class AdminOrderdetailView(AdminRequiredMixin, DetailView):
+    template_name = "admin/adminorderdetail.html"
+    model = Order
+    context_object_name = "ord_obj"
+
+class AdminOrderListView(AdminRequiredMixin, ListView):
+    template_name = "admin/adminorderlist.html"
+    queryset = Order.objects.all().order_by("-id")
+    context_object_name = "allorders"
+
+
+ 
         

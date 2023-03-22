@@ -106,3 +106,14 @@ class Order(models.Model):
 
     def __str__(self):
         return "Order: " + str(self.id)
+
+class Review(models.Model):
+    user = models.ForeignKey(Customer, models.CASCADE)
+    food = models.ForeignKey(Food, models.CASCADE)
+    comment = models.TextField(max_length=250)
+    rate = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+

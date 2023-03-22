@@ -1,11 +1,11 @@
-{% extends "admin/adminbase.html" %}
+{% extends 'admin/adminbase.html' %}
+{% block title %} All Orders {% endblock %}
 
-{% block title %} Admin Home {% endblock %}
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col md-12">
-            <h3 class="mt-5 mb-5">Pending Orders</h3>
+        <div class="col-md-12 mt-5">
+            <h3 class="mb-5">All Orders</h3><hr>
             <table class="table">
                 <thead>
                     <tr>
@@ -14,16 +14,18 @@
                         <th>Customer</th>
                         <th>Ordered On</th>
                         <th>Amount</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for order in pendingorders %}
+                    {% for order in allorders %}
                     <tr>
                         <td>{{forloop.counter}}</td>
                         <td><a href="{% url 'restroapp:adminorderdetail' order.id %}">ORD:{{order.id}}</a></td>
                         <td>{{order.ordered_by}}</td>
                         <td>{{order.created_at}}</td>
                         <td>Rs. {{order.total}}</td>
+                        <td>Rs. {{order.order_status}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
