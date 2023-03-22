@@ -12,26 +12,32 @@ class CheckoutForm(forms.ModelForm):
             "ordered_by": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Enter your Name...",
-                "style": "width:300px; " ,
+                "style": "width:400px; " ,
                 "class": "form-control",
             }),
             "shipping_address": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Enter your Address...",
-                "style": "width:300px",
+                "style": "width:400px",
                 "class": "form-control",
             }),
             "mobile": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Enter your Number...",
-                "style": "width:300px",
+                "style": "width:400px",
                 "class": "form-control",
             }),
             "email": forms.TextInput(attrs={
                 "class": "form-control",
                 "placeholder": "Enter your Email...",
-                "style": "width:300px",
+                "style": "width:400px",
                 "class": "form-control",
+            }),
+            "payment_method": forms.Select(attrs={
+                "class": "selectpicker form-control",
+                "data-live-search": "true",
+                "style": "width:400px",
+                
             }),
         }
 

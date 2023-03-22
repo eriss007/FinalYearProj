@@ -6,9 +6,9 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-6">
-            <h2 class="mt-4 checkouthead">Cart Items</h2>
-            <table class="table">
+        <div class="col-md-12">
+            <h2 class="mt-5 mb-3 erii gradient heading">Cart Items</h2>
+            <table class="table table-striped table-hover table-bordered table-light">
                 <thead>
                     <tr>
                         <th>SN.</th>
@@ -35,13 +35,18 @@
                 </tbody>
             </table>
             <a href="{% url 'restroapp:usercart' %}">Update Cart</a>
-            <div class="col-md-6">
-                <h2 class="mt-5 checkouthead">Checkout Details</h2>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <button class="btn view mb-5">Place order</button>
-                </form>
+            <div class="col-md-12 mx-auto">
+                <h2 class="mt-5 erii gradient heading">Checkout Details</h2>
+                <div class="row">
+                    <div class="mx-auto col-10 col-md-8 col-lg-4">
+                        <form action="" method="POST" class="mx-auto">
+                            {% csrf_token %}
+                            {{form.as_p}}
+                            <button class="btn view mb-5">Place order</button>
+                        </form>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>

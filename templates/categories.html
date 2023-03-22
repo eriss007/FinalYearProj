@@ -4,11 +4,11 @@
 
 {% block content %}
 <div class="container">
-  <h3 class="mt-5">Categories</h3>
-  <hr>
+  <h3 class="mt-5 mb-5 erii gradient heading">Categories</h3>
+  
   {% for cat in allcategories %}
-  <h4>{{cat.title}}</h4>
-  <hr>
+  <h4 class="text-uppercase gradient erii">{{cat.title}}</h4>
+  
   <div class="row g-3 gx-5 mt-5 mb-5 card-group">
     {% for f in cat.food_set.all %}
     <div class="col-12 col-md-6 col-lg-3 col xl-3">

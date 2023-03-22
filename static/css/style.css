@@ -197,3 +197,9 @@ body { min-height: 100%; }
 
 
 
+.form-horizontal{
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;  
+}
