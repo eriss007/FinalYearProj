@@ -7,7 +7,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
   <!-- Bootstrap CSS v5.2.1 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
   integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
@@ -18,11 +18,13 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+<!-- <body> -->
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
       <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'restroapp:home' %}">Restro App
-          <!-- <img src="{% static 'images/small_logo.png' %}" alt="Shandar Mo:mo" style="height: 60px; width: 30px;" /> -->
+          <!-- <img src="{% static 'images/small_logo.png' %}" alt="Shandar Mo:mo" style="height: 60px; width: 30px;" />  -->
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,13 +50,14 @@
           </form>
         </div>
       </div>
-    </nav>
-  </header>
+    </nav> 
+  <main >
   {% block content %}
 
 
 
   {% endblock %}
+  </main>
   <footer>
     <div class="">
       <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top bg-dark footerstyle">
