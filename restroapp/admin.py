@@ -4,11 +4,7 @@ from .models import *
 
 
 admin.site.register(
-    [Admin, Customer, Category, Food, ShoppingCart, CartProduct, Order, FoodImage])
+    [Admin, Customer, Category, Food, ShoppingCart, CartProduct, Order, FoodImage, ReviewRating])
 
 
 
-@admin.register(Review)
-class Reviewadmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'food', 'rate', 'created_at']
-    readonly_fields = ['created_at']

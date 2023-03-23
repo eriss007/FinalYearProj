@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import *
 from django.conf.urls import include
+from . import views
 
 
 app_name = "restroapp"
@@ -30,6 +31,8 @@ urlpatterns = [
     path("empty-cart/", EmptyCartView.as_view(), name="emptycart"),
 
     path("checkout/", CheckoutView.as_view(), name="checkout"),
+
+    path("submit_review/<int:food_id>", views.submit_review, name="submit_review"),
 
     path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(), name="customerorderdetail"),
 

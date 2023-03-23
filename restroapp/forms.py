@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order, Customer, Food
+from .models import Order, Customer, Food, ReviewRating
 from django.contrib.auth.models import User
 
 #creating orders obj to save it to db 
@@ -120,4 +120,8 @@ class FoodForm(forms.ModelForm):
 
         }
 
+class ReviewForms(forms.ModelForm):
+    class Meta:
+        model = ReviewRating
+        fields = ['subject', 'review', 'rating']
 
