@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% block title %}Customer Login{% endblock %}
 
 {% block content %}
@@ -9,6 +10,35 @@
     }
 </style>
 <html>
+    <body>
+        <img class="wave" src="{% static 'images/eating.svg' %}">
+        <div class="container">
+            <div class="img">
+                <img src="{% static 'images/eating.svg' %}">
+            </div>
+            <div class="login-container">
+                <form action="" method="POST">
+                    <img src="{% static 'images/avatar.svg' %}">
+                    <h2>Welcome</h2>
+                    <div class="input-div">
+                        <div class="i">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            {% csrf_token %}
+                            {{form.as_p}}
+                        </div>
+                    </div>
+                    <button class="btn view">Login</button>
+                    {% if error %}
+                    <li style="color: red;">{{error}}</li>
+                    {% endif %}
+                </form>
+                <p class="mt-2"> Don't have account? <a href="{% url 'restroapp:customerregistration' %}{% if request.GET.next %}?next={{request.GET.next}}{% endif %}">Register here!</a></p>
+
+            </div>
+        </div>
+    </body>
     <body>
     <div class="container">
         <div class="row">

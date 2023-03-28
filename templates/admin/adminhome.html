@@ -2,7 +2,12 @@
 
 {% block title %} Admin Home {% endblock %}
 {% block content %}
+
+<br>
 <div class="container col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+    {% include 'admin/status.html' %}
+
     <div class="row">
         <div class="col md-12">
             <h3 class="mt-5 mb-5">Pending Orders</h3>

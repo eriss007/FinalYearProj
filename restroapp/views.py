@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.db.models import Q
 import requests
+from django.contrib import messages, auth
 from django.http import HttpResponseRedirect
 from .models import *
 from .forms import *
@@ -82,7 +83,53 @@ class FoodDetailView(restroMixin, TemplateView):
             user = request.user
             Review(user=user, food=food, comment=comment, rate=rate).save()
             return redirect('food_detail', id=food_id)
+    
+    def post(self, request, slug):
+        url = request.META.get('HTTP_REFERER')
+        if request.method == "POST":
+            try:
+                food = Food.objects.get(slug=slug)
+                reviews = ReviewRating.objects.get(user__id=request.user.id, food__id=food_id)
+                form = ReviewForm(request.POST, instance=reviews)
+                form.save()
+                messages.success(request, 'Your review has been updated.')
 
+            except ReviewRating.DoesNotExist:
+                form = ReviewForm(request.POST)
+                if form.is_valid():
+                    data = ReviewRating()
+                    data.subject = form.cleaned_data['subject']
+                    data.rating = form.cleaned_data['rating']
+                    data.review = form.cleaned_data['review']
+                    food = Food.objects.get(slug=slug)
+                    data.food_id = food_id
+                    data.user_id = request.user.id
+                    data.save()
+                    messages.success(request, 'Your review has been submitted')
+            return redirect(url)
+
+# def submit_review(request, food_id):
+#     url = request.META.get('HTTP_REFERER')
+#     if request.method == 'POST':
+#         try:
+#             reviews = ReviewRating.objects.get(user__id=request.user.id, food__id=food_id)
+#             # if instance is not passed new review will be created instead of update
+#             form = ReviewForms(request.POST, instance=reviews)
+#             form.save()
+#             messages.success(request, 'Thank You! Your review has been updated.')
+#             return redirect(url)
+#         except ReviewRating.DoesNotExist:
+#             form = ReviewForms(request.POST)
+#             if form.is_valid():
+#                 data = ReviewRating()
+#                 data.subject = form.cleaned_data['subject']
+#                 data.rating = form.cleaned_data['rating']
+#                 data.review = form.cleaned_data['review']
+#                 data.food_id = food_id
+#                 data.user_id = request.user.id
+#                 data.save()
+#                 messages.success(request, 'Thank You! Your review has been submitted.')
+#                 return redirect(url)
 
 
 class CustomerRegistrationView(CreateView):
@@ -371,6 +418,15 @@ class AdminHomeView(AdminRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(*kwargs)
         context["pendingorders"] = Order.objects.filter(order_status = "Order Received").order_by("-id")
+        orders = Order.objects.all()
+        customer = Customer.objects.all()
+        total_customer = customer.count()
+        total_order = orders.count()
+        context["total_order"] = total_order
+        delivered = orders.filter(order_status="Order Completed").count()
+        pending = orders.filter(order_status="Order Received").count()
+        context["delivered"] = delivered
+        context["pending"] = pending
         return context
 
 class AdminOrderdetailView(AdminRequiredMixin, DetailView):
@@ -400,6 +456,9 @@ class AdminStatusChangeView(AdminRequiredMixin, View):
         return redirect(reverse_lazy("restroapp:adminorderdetail", kwargs={"pk": order_id}))
         
 
+
+
+                
 
  
         

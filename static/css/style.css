@@ -246,3 +246,15 @@ input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:
 label:hover ~ input:checked ~ label{
     color: #cc9000;
 }
+
+#total-orders{
+    background-color: var(--yellow2);
+}
+
+#orders-delivered{
+    background-color: var(--yellow2);
+}
+
+#total-pending{
+    background-color: var(--yellow2);
+}
