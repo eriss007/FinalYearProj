@@ -248,7 +248,7 @@ label:hover ~ input:checked ~ label{
 }
 
 #total-orders{
-    background-color: var(--yellow2);
+    background-color: var(--black);
 }
 
 #orders-delivered{
@@ -256,5 +256,13 @@ label:hover ~ input:checked ~ label{
 }
 
 #total-pending{
-    background-color: var(--yellow2);
+    background-color: var(--grey);
+}
+
+.wave{
+    position: fixed;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    z-index: -1;
 }

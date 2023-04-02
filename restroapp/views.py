@@ -1,4 +1,4 @@
-from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView
+from django.views.generic import View, TemplateView, CreateView, FormView, DetailView, ListView, UpdateView, DeleteView
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -72,6 +72,7 @@ class FoodDetailView(restroMixin, TemplateView):
         # product.view_count += 1
         product.save()
         context['food'] = product
+        context['reviews'] = ReviewRating.objects.all()
         return context
 
     def Review_rate(request):
@@ -89,7 +90,9 @@ class FoodDetailView(restroMixin, TemplateView):
         if request.method == "POST":
             try:
                 food = Food.objects.get(slug=slug)
-                reviews = ReviewRating.objects.get(user__id=request.user.id, food__id=food_id)
+                # reviews = ReviewRating.objects.get(customer_id=request.user.customer.id, food__id=food.id)
+                reviews = ReviewRating.objects.get(customer__id=request.user.customer.id, food__id=food.id)
+                
                 form = ReviewForm(request.POST, instance=reviews)
                 form.save()
                 messages.success(request, 'Your review has been updated.')
@@ -102,8 +105,8 @@ class FoodDetailView(restroMixin, TemplateView):
                     data.rating = form.cleaned_data['rating']
                     data.review = form.cleaned_data['review']
                     food = Food.objects.get(slug=slug)
-                    data.food_id = food_id
-                    data.user_id = request.user.id
+                    data.food_id = food.id
+                    data.customer_id = request.user.customer.id
                     data.save()
                     messages.success(request, 'Your review has been submitted')
             return redirect(url)
@@ -358,13 +361,53 @@ class CheckoutView(restroMixin, CreateView):
     def form_valid(self, form):
         cart_id = self.request.session.get("cart_id")
         if cart_id:
+            data = {"return_url": "http://127.0.0.1:8000/",
+                "website_url": "https://example.com/",
+                "amount": 1300,
+                "purchase_order_id": "test12",
+                "purchase_order_name": "test",
+                }
+            # replace the key with your live secret key
+            headers = {"Authorization": "Key f2bbc1b8c9a34b2bad4ab22542723b25"
+
+                    }
+            response = requests.post("https://a.khalti.com/api/v2/epayment/initiate/", json=data, headers=headers)
+            print(response, response.text)
+            data = response.json()
+            if response.status_code == 200:
+
+                return HttpResponseRedirect(data.get("payment_url"))
             cart_obj = ShoppingCart.objects.get(id=cart_id)
             form.instance.cart = cart_obj
             form.instance.subtotal = cart_obj.total
             form.instance.discount = 0
             form.instance.total = cart_obj.total
             form.instance.order_status = "Order Received"
+            print('Deleting cart ID from session2...')
             del self.request.session['cart_id']
+            print('Deleting cart ID from session...')
+            pm = form.cleaned_data.get("payment_method")
+            order = form.save()
+            if pm == "Khalti":
+                # data = {"return_url": "http://127.0.0.1:8000/",
+                #     "website_url": "https://example.com/",
+                #     "amount": 1300,
+                #     "purchase_order_id": "test12",
+                #     "purchase_order_name": "test",
+                #     }
+                # # replace the key with your live secret key
+                # headers = {"Authorization": "Key f2bbc1b8c9a34b2bad4ab22542723b25"
+
+                #         }
+                # response = requests.post("https://a.khalti.com/api/v2/epayment/initiate/", json=data, headers=headers)
+                # print(response, response.text)
+                # data = response.json()
+                # if response.status_code == 200:
+                pass
+                #     return HttpResponseRedirect(data.get("payment_url"))
+            elif pm == "Esewa":
+                return redirect(reverse("restroapp:esewarequest") + "?o_id=" + str(order.id))
+
         else:
             return redirect("restroapp:home")
         return super().form_valid(form)
@@ -454,7 +497,10 @@ class AdminStatusChangeView(AdminRequiredMixin, View):
         order_obj.order_status = new_status
         order_obj.save()
         return redirect(reverse_lazy("restroapp:adminorderdetail", kwargs={"pk": order_id}))
-        
+
+
+      
+      
 
 
 

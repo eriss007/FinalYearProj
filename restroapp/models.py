@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Avg, Count
 
 # Create your models here.
 #database 
@@ -44,6 +45,20 @@ class Food(models.Model):
 
     def __str__(self):
         return self.title
+
+    def averageReview(self):
+        reviews = ReviewRating.objects.filter(food=self, status=True).aggregate(average=Avg('rating'))
+        avg = 0
+        if reviews['average'] is not None:
+            avg = float(reviews['average'])
+        return avg
+
+    def countReview(self):
+        reviews = ReviewRating.objects.filter(food=self, status=True).aggregate(count=Count('id'))
+        count = 0
+        if reviews['count'] is not None:
+            count = int(reviews['count'])
+        return count
 
 
 class FoodImage(models.Model):
@@ -119,7 +134,7 @@ class Order(models.Model):
 #         return str(self.id)
 
 class ReviewRating(models.Model):
-    user = models.ForeignKey(Customer, models.CASCADE)
+    customer = models.ForeignKey(Customer, models.CASCADE)
     food = models.ForeignKey(Food, models.CASCADE)
     subject = models.CharField(max_length=100, blank=True)
     review = models.TextField(max_length=500, blank=True)
@@ -131,3 +146,5 @@ class ReviewRating(models.Model):
 
     def __str__(self):
         return self.subject
+
+

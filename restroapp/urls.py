@@ -32,8 +32,10 @@ urlpatterns = [
 
     path("checkout/", CheckoutView.as_view(), name="checkout"),
 
-    # path("submit_review/<int:food_id>", views.submit_review, name="submit_review"),
-    # path("submit_review/<int:food_id>", SubmitReview.as_view, name="submit_review"),
+    
+    # path("khalti-request/", KhaltiRequestView.as_view(), name="khaltirequest"),
+    # path("khalti-verify/", KhaltiVerifyView.as_view(), name="khaltiverify"),
+
 
 
     path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(), name="customerorderdetail"),
