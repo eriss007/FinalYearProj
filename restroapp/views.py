@@ -68,11 +68,13 @@ class FoodDetailView(restroMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         url_slug = self.kwargs['slug']
-        product = Food.objects.get(slug=url_slug)
+        food = Food.objects.get(slug=url_slug)
+        food_reviews = ReviewRating.objects.filter(
+        food=food).order_by('-creatated_date')
         # product.view_count += 1
-        product.save()
-        context['food'] = product
-        context['reviews'] = ReviewRating.objects.all()
+        food.save()
+        context['food'] = food
+        context['reviews'] = food_reviews
         return context
 
     def Review_rate(request):
@@ -361,9 +363,12 @@ class CheckoutView(restroMixin, CreateView):
     def form_valid(self, form):
         cart_id = self.request.session.get("cart_id")
         if cart_id:
+            cart_obj = ShoppingCart.objects.get(id=cart_id)
+            amt = cart_obj.total*100
+            print (type(amt))
             data = {"return_url": "http://127.0.0.1:8000/",
                 "website_url": "https://example.com/",
-                "amount": 1300,
+                "amount": amt,
                 "purchase_order_id": "test12",
                 "purchase_order_name": "test",
                 }
@@ -497,6 +502,19 @@ class AdminStatusChangeView(AdminRequiredMixin, View):
         order_obj.order_status = new_status
         order_obj.save()
         return redirect(reverse_lazy("restroapp:adminorderdetail", kwargs={"pk": order_id}))
+
+# class AdminAddView():
+
+class FoodUpdateView(UpdateView):
+    model = Food
+    form_class = FoodUpdateForm
+    template_name = "admin/update.html"
+    # success_url = reverse_lazy('restroapp:update')
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('restroapp:update', kwargs={'pk': pk})
+
 
 
       

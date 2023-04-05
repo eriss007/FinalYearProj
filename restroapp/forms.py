@@ -120,6 +120,43 @@ class FoodForm(forms.ModelForm):
 
         }
 
+class FoodUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Food
+        fields = ["title", "slug", "category", "image",
+                  "selling_price", "description", "return_policy"]
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the food title here..."
+            }),
+            "slug": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the unique slug here..."
+            }),
+            "category": forms.Select(attrs={
+                "class": "form-control"
+            }),
+            "image": forms.ClearableFileInput(attrs={
+                "class": "form-control"
+            }),
+            "selling_price": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Selling price of the food..."
+            }),
+            "description": forms.Textarea(attrs={
+                "class": "form-control",
+                "placeholder": "Description of the food...",
+                "rows": 5
+            }),
+            "return_policy": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the food return policy here..."
+            }),
+
+        }
+
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = ReviewRating

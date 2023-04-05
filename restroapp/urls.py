@@ -35,12 +35,13 @@ urlpatterns = [
     
     # path("khalti-request/", KhaltiRequestView.as_view(), name="khaltirequest"),
     # path("khalti-verify/", KhaltiVerifyView.as_view(), name="khaltiverify"),
-
+    path('update/<int:pk>/', FoodUpdateView.as_view(), name="update"),
 
 
     path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(), name="customerorderdetail"),
 
     path("admin-login/", AdminLoginView.as_view(), name="adminlogin"),
+    # path("admin-add/", AdminAddView.as_view(), name="adminadd"),
     path("admin-home/", AdminHomeView.as_view(), name="adminhome"),
     path("admin-order/<int:pk>/", AdminOrderdetailView.as_view(), name="adminorderdetail"),
     path("admin-all-orders/", AdminOrderListView.as_view(), name="adminorderlist"),

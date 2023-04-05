@@ -1,0 +1,23 @@
+{% extends "admin/adminbase.html" %}
+
+{% block title %} Admin Home {% endblock %}
+{% block content %}
+<form action="" method="POST">
+    
+    <h2>Welcome</h2>
+    <div class="input-div">
+        <div class="i">
+            <i class="fas fa-user"></i>
+        </div>
+        <div>
+            {% csrf_token %}
+            {{form.as_p}}
+        </div>
+    </div>
+    {% for food in  %}
+    <button class="btn view" href="{% url :'restroapp:update' food.pk %}">Update</button>
+    {% if error %}
+    <li style="color: red;">{{error}}</li>
+    {% endif %}
+</form>
+{% endblock %}
