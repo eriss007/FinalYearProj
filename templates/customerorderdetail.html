@@ -28,11 +28,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for cp in ord_obj.shoppingcart.cartproduct_set.all %}
+                    {% for cp in ord_obj.cart.cartproduct_set.all %}
                     <tr>
                         <td>{{forloop.counter}}</td>
-                        <td><a target="_blank"
-                                href="{% url 'restroapp:fooddetail' cp.product.slug %}">{{cp.product.title}}({{cp.product.id}})</a>
+                        <td><a target="_blank">{{cp.product.title}}({{cp.product.id}})</a>
                         </td>
                         <td>{{cp.rate}}</td>
                         <td>{{cp.quantity}}</td>

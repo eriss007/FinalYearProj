@@ -20,7 +20,7 @@ class restroMixin(object):
         cart_id = request.session.get("cart_id")
         if cart_id:
             cart_obj = ShoppingCart.objects.get(id=cart_id)
-            if request.user.is_authenticated and request.user.customer:
+            if request.user.is_authenticated and hasattr(request.user, 'customer'):
                 cart_obj.customer = request.user.customer
                 cart_obj.save()
         return super().dispatch(request, *args, **kwargs)
@@ -112,30 +112,6 @@ class FoodDetailView(restroMixin, TemplateView):
                     data.save()
                     messages.success(request, 'Your review has been submitted')
             return redirect(url)
-
-# def submit_review(request, food_id):
-#     url = request.META.get('HTTP_REFERER')
-#     if request.method == 'POST':
-#         try:
-#             reviews = ReviewRating.objects.get(user__id=request.user.id, food__id=food_id)
-#             # if instance is not passed new review will be created instead of update
-#             form = ReviewForms(request.POST, instance=reviews)
-#             form.save()
-#             messages.success(request, 'Thank You! Your review has been updated.')
-#             return redirect(url)
-#         except ReviewRating.DoesNotExist:
-#             form = ReviewForms(request.POST)
-#             if form.is_valid():
-#                 data = ReviewRating()
-#                 data.subject = form.cleaned_data['subject']
-#                 data.rating = form.cleaned_data['rating']
-#                 data.review = form.cleaned_data['review']
-#                 data.food_id = food_id
-#                 data.user_id = request.user.id
-#                 data.save()
-#                 messages.success(request, 'Thank You! Your review has been submitted.')
-#                 return redirect(url)
-
 
 class CustomerRegistrationView(CreateView):
     template_name = "customerregistration.html"
@@ -342,7 +318,7 @@ class CheckoutView(restroMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         #fetching currently logged in user
-        if request.user.is_authenticated and request.user.customer:
+        if request.user.is_authenticated and hasattr(request.user, 'customer'):
             pass
         else:
             return redirect("/login/?next=/checkout/")
@@ -417,10 +393,10 @@ class CheckoutView(restroMixin, CreateView):
             return redirect("restroapp:home")
         return super().form_valid(form)
 
-class CustomerOrderDetailView(DetailView):
+class CustomerOrderDetailView(TemplateView):
     template_name = "customerorderdetail.html"
-    model = Order
-    context_obj_name = "ord_obj"
+    # model = Order
+    # context_obj_name = "ord_obj"
 
     #customer must be logged in to check this
     def dispatch(self, request, *args, **kwargs):
@@ -429,6 +405,15 @@ class CustomerOrderDetailView(DetailView):
         else:
             return redirect("/login/?next=/profile/")
         return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        
+        context = super().get_context_data(**kwargs)
+        ord_obj_id = self.kwargs['id']
+        ord_obj = Order.objects.all().get(id=ord_obj_id)
+        print(ord_obj)
+        context['ord_obj'] = ord_obj
+        return context
 
 
 class AdminLoginView(FormView):
@@ -475,6 +460,11 @@ class AdminHomeView(AdminRequiredMixin, TemplateView):
         pending = orders.filter(order_status="Order Received").count()
         context["delivered"] = delivered
         context["pending"] = pending
+        # pending = Food.objects.all().order_by("-id")
+        # paginator = Paginator(pending, 10)
+        # page_number = self.request.GET.get('page')
+        # order_list = paginator.get_page(page_number)
+        # context['order_list'] = order_list
         return context
 
 class AdminOrderdetailView(AdminRequiredMixin, DetailView):
@@ -509,11 +499,37 @@ class FoodUpdateView(UpdateView):
     model = Food
     form_class = FoodUpdateForm
     template_name = "admin/update.html"
+    
     # success_url = reverse_lazy('restroapp:update')
 
     def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse_lazy('restroapp:update', kwargs={'pk': pk})
+        url = self.request.META.get("HTTP_REFERER")
+        return reverse_lazy('restroapp:foodlist')
+
+
+
+class FoodListView(AdminRequiredMixin ,TemplateView):
+    template_name = "admin/food_list.html"
+
+    #returning context (sending data from backend to frontend) displaying food cards
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        all_foods = Food.objects.all().order_by("-id")
+        paginator = Paginator(all_foods, 12)
+        page_number = self.request.GET.get('page')
+        food_list = paginator.get_page(page_number)
+        context['food_list'] = food_list
+        return context
+
+
+class FoodDeleteView(AdminRequiredMixin ,DeleteView):
+    model = Food
+
+    def get_success_url(self):
+        url = self.request.META.get("HTTP_REFERER")
+        return url
+    # success_url = reverse_lazy('restroapp:foodlist')
+
 
 
 

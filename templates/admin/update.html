@@ -1,4 +1,4 @@
-{% extends "admin/adminbase.html" %}
+<!-- {% extends "admin/adminbase.html" %}
 
 {% block title %} Admin Home {% endblock %}
 {% block content %}
@@ -14,10 +14,8 @@
             {{form.as_p}}
         </div>
     </div>
-    {% for food in  %}
-    <button class="btn view" href="{% url :'restroapp:update' food.pk %}">Update</button>
-    {% if error %}
-    <li style="color: red;">{{error}}</li>
-    {% endif %}
+
+    <button class="btn view" href="{% url 'restroapp:update' food.pk %}">Update</button>
+
 </form>
-{% endblock %}
+{% endblock %} -->

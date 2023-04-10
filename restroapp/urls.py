@@ -36,9 +36,11 @@ urlpatterns = [
     # path("khalti-request/", KhaltiRequestView.as_view(), name="khaltirequest"),
     # path("khalti-verify/", KhaltiVerifyView.as_view(), name="khaltiverify"),
     path('update/<int:pk>/', FoodUpdateView.as_view(), name="update"),
+    path('food-delete/<int:pk>/', FoodDeleteView.as_view(), name="food-delete"),
+    path('admin-foodlist/', FoodListView.as_view(), name="foodlist"),
 
 
-    path("profile/order-<int:pk>/", CustomerOrderDetailView.as_view(), name="customerorderdetail"),
+    path("profile/order-<int:id>/", CustomerOrderDetailView.as_view(), name="customerorderdetail"),
 
     path("admin-login/", AdminLoginView.as_view(), name="adminlogin"),
     # path("admin-add/", AdminAddView.as_view(), name="adminadd"),
