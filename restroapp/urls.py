@@ -36,6 +36,7 @@ urlpatterns = [
     # path("khalti-request/", KhaltiRequestView.as_view(), name="khaltirequest"),
     # path("khalti-verify/", KhaltiVerifyView.as_view(), name="khaltiverify"),
     path('update/<int:pk>/', FoodUpdateView.as_view(), name="update"),
+    path('food-create/', FoodCreateView.as_view(), name="food-create"),
     path('food-delete/<int:pk>/', FoodDeleteView.as_view(), name="food-delete"),
     path('admin-foodlist/', FoodListView.as_view(), name="foodlist"),
 

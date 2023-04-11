@@ -530,6 +530,36 @@ class FoodDeleteView(AdminRequiredMixin ,DeleteView):
         return url
     # success_url = reverse_lazy('restroapp:foodlist')
 
+class FoodCreateView(CreateView):
+    model = Food
+    form_class = FoodUpdateForm
+    template_name = "admin/food-create.html"
+
+    def form_valid(self, form):
+        # Call the parent class's form_valid method to save the form
+        response = super().form_valid(form)
+        # Add your custom behavior here
+        print("Food saved successfully!")
+        # Return the response
+        return response
+    
+    def get_success_url(self):
+        url = self.request.META.get("HTTP_REFERER")
+        return reverse_lazy('restroapp:foodlist')
+
+class FoodCreateView(CreateView):
+    model = Food
+    form_class = FoodUpdateForm
+    template_name = "admin/food-create.html"
+
+    def form_valid(self, form):
+        print("Form is valid!")
+        form.save()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        url = self.request.META.get("HTTP_REFERER")
+        return reverse_lazy('restroapp:foodlist')
 
 
 
