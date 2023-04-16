@@ -2,6 +2,7 @@
 
 {% block title %} Admin Home {% endblock %}
 {% block content %}
+{% load static %}
 
 <br>
 <div class="container col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -33,6 +34,23 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if order_list.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ order_list.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current-page">
+                        Page {{ order_list.number }} of {{ order_list.paginator.num_pages }}.
+                    </span>
+
+                    {% if order_list.has_next %}
+                        <a href="?page={{ order_list.next_page_number }}">next</a>
+                        <a href="?page={{ order_list.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
         </div>
     </div>
 </div>

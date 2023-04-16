@@ -4,7 +4,7 @@ from .models import *
 
 
 admin.site.register(
-    [Admin, Customer, Category, Food, ShoppingCart, CartProduct, Order, FoodImage, ReviewRating])
+    [Admin, Customer, Category, Food, ShoppingCart, CartProduct, Order, FoodImage, ReviewRating, Ingredients])
 
 
 

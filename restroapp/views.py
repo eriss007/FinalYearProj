@@ -11,6 +11,13 @@ from django.contrib import messages, auth
 from django.http import HttpResponseRedirect
 from .models import *
 from .forms import *
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline
+import joblib
+import csv
+import os.path
 # from django.utils.translation import ugettextlazy as
 
 
@@ -37,6 +44,30 @@ class HomeView(restroMixin, TemplateView):
         page_number = self.request.GET.get('page')
         food_list = paginator.get_page(page_number)
         context['food_list'] = food_list
+        context['recommend_list'] = []
+        if self.request.user.is_authenticated and Customer.objects.filter(user=self.request.user).exists():
+            # Load the saved model
+            pipeline = joblib.load('model.joblib')
+            foods = pd.read_csv('foods.csv')
+            ratings = pd.read_csv('ratings.csv')
+            customer_id = self.request.user.customer.id
+            if ratings[ratings['customer'] == customer_id]['food'].empty:
+                return context
+            # Get the foods that the customer has not rated
+            not_rated = foods[~foods['id'].isin(
+                ratings[ratings['customer'] == customer_id]['food'])]
+            # Predict the ratings for the not rated foods
+            predicted_ratings = pipeline.predict(not_rated['title'])
+            # Add the predicted ratings to the not rated dataframe
+            # A value is trying to be set on a copy of a slice from a DataFrame.
+            # not_rated['predicted_rating'] = predicted_ratings
+            not_rated.loc[:, 'predicted_rating'] = predicted_ratings
+            # Get the top 4 recommended foods
+            top_foods = not_rated.sort_values(
+                by='predicted_rating', ascending=False).head(4)
+            recommendations = Food.objects.all().filter(
+                id__in=top_foods['id'].tolist())
+            context['recommend_list'] = recommendations
         return context
 
 class AllFoodView(restroMixin, TemplateView):
@@ -66,6 +97,7 @@ class FoodDetailView(restroMixin, TemplateView):
     template_name = "fooddetail.html"
 
     def get_context_data(self, **kwargs):
+        print("get_context_data() function called")
         context = super().get_context_data(**kwargs)
         url_slug = self.kwargs['slug']
         food = Food.objects.get(slug=url_slug)
@@ -75,8 +107,48 @@ class FoodDetailView(restroMixin, TemplateView):
         food.save()
         context['food'] = food
         context['reviews'] = food_reviews
+        
+
+        all_ratings = ReviewRating.objects.all()
+        with open('ratings.csv', 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['food', 'customer', 'rating'])
+            for i in all_ratings:
+                writer.writerow([i.food.id, i.customer, i.rating])
+        print("CSV file created successfully")
+        foodID_to_name = {}
+        with open('foods.csv', newline='', encoding='ISO-8859-1') as csvfile:
+            food_reader = csv.reader(csvfile)
+            next(food_reader)
+            for row in food_reader:
+                foodID = int(row[0])
+                movie_name = row[1]
+                foodID_to_name[foodID] = movie_name
+        # Load the data
+        foods = pd.read_csv('foods.csv')
+        ratings = pd.read_csv('ratings.csv')
+        # Define the pipeline
+        pipeline = Pipeline([
+            ('tfidf', TfidfVectorizer()),
+            ('nb', KNeighborsClassifier())
+        ])
+        df = pd.merge(ratings, foods, how='left',
+                      left_on='food', right_on='id')
+        X = df['title']  # feature
+        y = df['rating']  # target
+        # Train the model
+        pipeline.fit(X, y)
+        # Save the model
+        joblib.dump(pipeline, 'model.joblib')
+
+        if os.path.isfile('ratings.csv'):
+            print("CSV file exists")
+        else:
+            print("CSV file does not exist")
+
         return context
 
+        
     def Review_rate(request):
         if request.method == "GET":
             food_id = request.GET.get('food_id')
@@ -246,9 +318,12 @@ class AddToCartView(restroMixin, TemplateView):
             cart_obj.total += food_obj.selling_price
             cart_obj.save()
 
-        # return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+        # success message
+        success_message = f"{food_obj.title} added to cart successfully."
+        messages.success(self.request, success_message)
 
         return context
+        
 
     
 class MyCartView(restroMixin, TemplateView):
@@ -352,12 +427,14 @@ class CheckoutView(restroMixin, CreateView):
             headers = {"Authorization": "Key f2bbc1b8c9a34b2bad4ab22542723b25"
 
                     }
-            response = requests.post("https://a.khalti.com/api/v2/epayment/initiate/", json=data, headers=headers)
-            print(response, response.text)
-            data = response.json()
-            if response.status_code == 200:
-
-                return HttpResponseRedirect(data.get("payment_url"))
+            pm = form.cleaned_data.get("payment_method")
+            
+            if pm == "Khalti":
+                response = requests.post("https://a.khalti.com/api/v2/epayment/initiate/", json=data, headers=headers)
+                print(response, response.text)
+                data = response.json()
+                if response.status_code == 200:
+                    return HttpResponseRedirect(data.get("payment_url"))
             cart_obj = ShoppingCart.objects.get(id=cart_id)
             form.instance.cart = cart_obj
             form.instance.subtotal = cart_obj.total
@@ -367,28 +444,8 @@ class CheckoutView(restroMixin, CreateView):
             print('Deleting cart ID from session2...')
             del self.request.session['cart_id']
             print('Deleting cart ID from session...')
-            pm = form.cleaned_data.get("payment_method")
             order = form.save()
-            if pm == "Khalti":
-                # data = {"return_url": "http://127.0.0.1:8000/",
-                #     "website_url": "https://example.com/",
-                #     "amount": 1300,
-                #     "purchase_order_id": "test12",
-                #     "purchase_order_name": "test",
-                #     }
-                # # replace the key with your live secret key
-                # headers = {"Authorization": "Key f2bbc1b8c9a34b2bad4ab22542723b25"
-
-                #         }
-                # response = requests.post("https://a.khalti.com/api/v2/epayment/initiate/", json=data, headers=headers)
-                # print(response, response.text)
-                # data = response.json()
-                # if response.status_code == 200:
-                pass
-                #     return HttpResponseRedirect(data.get("payment_url"))
-            elif pm == "Esewa":
-                return redirect(reverse("restroapp:esewarequest") + "?o_id=" + str(order.id))
-
+                
         else:
             return redirect("restroapp:home")
         return super().form_valid(form)
@@ -460,11 +517,12 @@ class AdminHomeView(AdminRequiredMixin, TemplateView):
         pending = orders.filter(order_status="Order Received").count()
         context["delivered"] = delivered
         context["pending"] = pending
-        # pending = Food.objects.all().order_by("-id")
-        # paginator = Paginator(pending, 10)
-        # page_number = self.request.GET.get('page')
-        # order_list = paginator.get_page(page_number)
-        # context['order_list'] = order_list
+        pendingg = Food.objects.all().order_by("-id")
+        paginator = Paginator(pendingg, 10)
+        page_number = self.request.GET.get('page')
+        order_list = paginator.get_page(page_number)
+        context['order_list'] = order_list
+        
         return context
 
 class AdminOrderdetailView(AdminRequiredMixin, DetailView):
@@ -493,14 +551,12 @@ class AdminStatusChangeView(AdminRequiredMixin, View):
         order_obj.save()
         return redirect(reverse_lazy("restroapp:adminorderdetail", kwargs={"pk": order_id}))
 
-# class AdminAddView():
 
 class FoodUpdateView(UpdateView):
     model = Food
     form_class = FoodUpdateForm
     template_name = "admin/update.html"
     
-    # success_url = reverse_lazy('restroapp:update')
 
     def get_success_url(self):
         url = self.request.META.get("HTTP_REFERER")
@@ -519,6 +575,8 @@ class FoodListView(AdminRequiredMixin ,TemplateView):
         page_number = self.request.GET.get('page')
         food_list = paginator.get_page(page_number)
         context['food_list'] = food_list
+        # Add the total number of pages to the context
+        context['num_pages'] = paginator.num_pages
         return context
 
 
@@ -562,9 +620,61 @@ class FoodCreateView(CreateView):
         return reverse_lazy('restroapp:foodlist')
 
 
+class IngredientListView(AdminRequiredMixin ,TemplateView):
+    template_name = "admin/ingredient_list.html"
 
-      
-      
+    #returning context (sending data from backend to frontend) displaying food cards
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        all_ingredients = Ingredients.objects.all().order_by("-id")
+        paginator = Paginator(all_ingredients, 12)
+        page_number = self.request.GET.get('page')
+        ingredient_list = paginator.get_page(page_number)
+        context['ingredient_list'] = ingredient_list
+        return context
+
+class IngredientCreateView(CreateView):
+    model = Ingredients
+    form_class = IngredientUpdateForm
+    template_name = "admin/ingredient-create.html"
+
+    def form_valid(self, form):
+        print("Form is valid!")
+        form.save()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        url = self.request.META.get("HTTP_REFERER")
+        return reverse_lazy('restroapp:ingredientlist')
+
+class IngredientDeleteView(AdminRequiredMixin ,DeleteView):
+    model = Ingredients
+
+    def get_success_url(self):
+        url = self.request.META.get("HTTP_REFERER")
+        return url   
+
+
+class IngredientUpdateView(UpdateView):
+    model = Ingredients
+    form_class = IngredientUpdateForm
+    template_name = "admin/ingredient-update.html"
+
+    def form_valid(self, form):
+        # Get the updated stock level from the form
+        new_stock_level = form.cleaned_data.get('stock_level')
+
+        # Update the ingredient's stock level
+        ingredient = form.save(commit=False)
+        ingredient.stock_level = new_stock_level
+        ingredient.save()
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        url = self.request.META.get("HTTP_REFERER")
+        return reverse_lazy('restroapp:ingredientlist')
+
 
 
 

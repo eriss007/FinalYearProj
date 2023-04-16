@@ -1,10 +1,10 @@
 {% extends "admin/adminbase.html" %}
 
-{% block title %} Admin Home {% endblock %}
+{% block title %} Create Ingredient  {% endblock %}
 {% block content %}
 <form action="" method="POST" enctype="multipart/form-data">
     
-    <h2 class="text-center mt-5 mb-5">Add Food Items</h2>
+    <h2 class="text-center mt-5 mb-5">Add Ingredient Items</h2>
     <div class="input-div mx-auto col-10 col-md-8 col-lg-6 updform">
         <div>
             {% csrf_token %}
@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="text-center">
-        <button class="btn view justify-content-center mb-5" href="{% url 'restroapp:food-create'  %}">Create</button>
+        <button class="btn view justify-content-center mb-5" href="{% url 'restroapp:ingredient-create'  %}">Create</button>
     </div>
 </form>
 {% endblock %} 

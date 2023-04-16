@@ -1,5 +1,5 @@
 from django import forms
-from .models import Order, Customer, Food, ReviewRating
+from .models import Order, Customer, Food, ReviewRating, Ingredients
 from django.contrib.auth.models import User
 
 #creating orders obj to save it to db 
@@ -120,6 +120,30 @@ class FoodForm(forms.ModelForm):
 
         }
 
+class IngredientUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Ingredients
+        fields = ["title", "slug", 
+                  "cost_price", "stock_level"]
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the food title here..."
+            }),
+            "slug": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Enter the unique slug here..."
+            }),
+            "cost_price": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Selling price of the food..."
+            }),
+            "stock_level": forms.NumberInput(attrs={
+                "class": "form-control",
+                "placeholder": "Selling the amount..."
+            }),
+        }
+        
 class FoodUpdateForm(forms.ModelForm):
 
     class Meta:

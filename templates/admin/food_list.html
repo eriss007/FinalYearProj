@@ -3,24 +3,25 @@
 {% block title %} All food {% endblock %}
 {% block content %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h4 class="mt-5 mb-5 erii gradient heading"><i class="bi bi-cart-fill"></i> All Food List</h4>
+<div class="">
+    <div class="row foodlist" >
+        <div class="col-md-10 mx-auto">
+            <h4 class="mt-5 mb-5 erii gradient heading"></i> All Food List</h4>
           
            
-            <a href="{% url 'restroapp:food-create'  %}" class="btn view">Create</a>
+            <a href="{% url 'restroapp:food-create'  %}" class="btn btn-secondary mb-3"><i class="bi bi-plus"></i>Add Food</a>
            
-            <table class="table table-striped table-hover table-bordered">
-                <thead class="">
+            <table class="table table-hover table-responsive">
+                <thead class="table-dark">
                     <tr>
                         <th>SN.</th>
                         <th>Item</th>
                         <th>Description</th>
-                        <th>Selling Price</th>
+                        <th>Price</th>
                         <th>Image</th>
                         <th>Return Policy</th>
-                        <th>Action</th>
+                        <th>Update</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +36,8 @@
                         <td>
                             <!-- requires dynamic id of cart product obj which retrives cart product -->
                             
-                            <a href="{% url 'restroapp:update' f.pk %}" class="btn view">Update</a>
+                            <a href="{% url 'restroapp:update' f.pk %}" class="btn updbtn  ">Update</a>
+                        </td>
                             <!-- <button class="btn btn-danger" type="button" data-toggle="modal"
                                 data-target="#updateModal{{ f.id }}" action="{% url 'restroapp:update' f.pk %}">Update</button> -->
                             <!-- Update Modal -->
@@ -65,9 +67,10 @@
                                 </div>
                             </div> -->
                             <!-- <a href="{% url 'restroapp:food-delete' f.pk %}" class="btn view">Delete</a> -->
-
+                            <td>
                             <button class="btn btn-danger" type="button" data-toggle="modal"
                                 data-target="#deleteModal{{ f.id }}">Remove</button>
+
                             <!-- Delete Modal -->
                             <div class="modal fade" id="deleteModal{{ f.id }}" tabindex="-1" role="dialog"
                                 aria-labelledby="deleteModalLabel{{ f.id }}" aria-hidden="true">
@@ -100,6 +103,37 @@
                 </tbody>
 
             </table>
+            <nav aria-label="...">
+                <ul class="pagination justify-content-end">
+                  {% if food_list.has_previous %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ food_list.previous_page_number }}">Previous</a>
+                  </li>
+                  {% else %}
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                  </li>
+                  {% endif %}
+          
+                  {% for i in food_list.paginator.page_range %}
+                  {% if i == food_list.number %}
+                  <li class="page-item active"><a class="page-link">{{i}}</a></li>
+                  {% else %}
+                  <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                  {% endif %}
+                  {% endfor %}
+          
+                  {% if food_list.has_next %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ food_list.next_page_number }}">Next</a>
+                  </li>
+                  {% else %}
+                  <li class="page-item disabled">
+                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </nav> 
         </div>
     </div>
 </div>

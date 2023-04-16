@@ -1,0 +1,77 @@
+{% extends 'admin/adminbase.html' %}
+{% load static %}
+{% block title %} All Ingredients {% endblock %}
+{% block content %}
+
+<div class="">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <h4 class="mt-4 mb-5 erii heading"></i> Inventory</h4>
+          
+           
+            <a href="{% url 'restroapp:ingredient-create'  %}" class="btn btn-secondary mb-3"><i class="bi bi-plus"></i>Add Ingredient</a>
+           
+            <table class="table table-hover ">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SN.</th>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Stock Level</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in ingredient_list %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{i.title}}</td>
+                        <td>Rs. {{i.cost_price}}</td>
+                        <td> {{i.stock_level}}</td>
+                        <td>
+                            <!-- requires dynamic id of cart product obj which retrives cart product -->
+                            
+                            <a href="{% url 'restroapp:ingredientupdate' i.pk %}" class="btn updbtn  ">Update</a>
+                        </td>
+
+                            <td>
+                            <button class="btn btn-danger" type="button" data-toggle="modal"
+                                data-target="#deleteModal{{ i.id }}">Remove</button>
+
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal{{ i.id }}" tabindex="-1" role="dialog"
+                                aria-labelledby="deleteModalLabel{{ i.id }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel{{ i.id }}">Remove Food
+                                            </h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to remove the food?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Cancel</button>
+                                            <form method="post" action="{% url 'restroapp:ingredient-delete' i.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Remove</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

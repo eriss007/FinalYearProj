@@ -32,13 +32,15 @@ urlpatterns = [
 
     path("checkout/", CheckoutView.as_view(), name="checkout"),
 
-    
-    # path("khalti-request/", KhaltiRequestView.as_view(), name="khaltirequest"),
-    # path("khalti-verify/", KhaltiVerifyView.as_view(), name="khaltiverify"),
     path('update/<int:pk>/', FoodUpdateView.as_view(), name="update"),
     path('food-create/', FoodCreateView.as_view(), name="food-create"),
     path('food-delete/<int:pk>/', FoodDeleteView.as_view(), name="food-delete"),
     path('admin-foodlist/', FoodListView.as_view(), name="foodlist"),
+    path('admin-ingredientlist/', IngredientListView.as_view(), name="ingredientlist"),
+    path('ingredient-update/<int:pk>/', IngredientUpdateView.as_view(), name="ingredientupdate"),
+    path('ingredient-create/', IngredientCreateView.as_view(), name="ingredient-create"),
+    path('ingredient-delete/<int:pk>/', IngredientDeleteView.as_view(), name="ingredient-delete"),
+
 
 
     path("profile/order-<int:id>/", CustomerOrderDetailView.as_view(), name="customerorderdetail"),

@@ -136,18 +136,27 @@ h3{
     color: var(--yellow2);
 }
 
-
-.view{
-    color: var(--white);
-    background-color: var(--black);
-    text-decoration: none;
-    
+.updbtn{
+    background-color: var(--yellow2)!important;
+    color: var(--white)!important;
 }
 
+
+.updbtn:hover{
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
+
+.updform{
+    font-family: 'Poppins', sans-serif;
+}
+.view{
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
 .view:hover{
-    color: var(--white);
-    background-color: var(--yellow2);
-    border: 1px solid var(--yellow2);
+    background-color: var(--yellow2) !important;
+    color: var(--white) !important;
 }
 
 .view_btn{
@@ -266,3 +275,12 @@ label:hover ~ input:checked ~ label{
     bottom: 0;
     z-index: -1;
 }
+
+.login-image{
+    width: 400px;
+    height: 700px;
+}
+
+.foodlist {
+    overflow: hidden;
+  }

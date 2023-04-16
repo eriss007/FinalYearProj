@@ -49,10 +49,10 @@
     <div class="row">
         <div class="col-md-9">
             <header class="section-heading">
-                <h3 class="mt-5">Customer Reviews</h3>
+                
                 <form action="{% url 'restroapp:fooddetail' food.slug %}" method="POST">
                     {% csrf_token %}
-                    <h5 class="text-uppercase font-weight-bold">Write Your Review</h5>
+                    <h5 class="text-uppercase font-weight-bold mt-3">Write Your Review</h5>
                     <div>
 
                         <label>How do you rate this product?</label>

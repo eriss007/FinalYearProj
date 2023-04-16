@@ -1,10 +1,10 @@
 {% extends "admin/adminbase.html" %}
 
-{% block title %} Food Update {% endblock %}
+{% block title %} Ingredient Update {% endblock %}
 {% block content %}
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="" method="POST">
     
-    <h1 class="text-center mt-5 mb-5">UPDATE FOOD DETAILS</h1>
+    <h1 class="text-center mt-5 mb-5">UPDATE INGREDIENT DETAILS</h1>
     <div class="input-div mx-auto col-10 col-md-8 col-lg-6 updform">
         <div >
             {% csrf_token %}
@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="text-center">
-    <button class="btn view justify-content-center mb-5" href="{% url 'restroapp:update' food.pk %}">Update</button>
+    <button class="btn view justify-content-center mb-5" href="{% url 'restroapp:ingredientupdate' ingredients.pk %}">Update</button>
     </div>
 </form>
 {% endblock %} 

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 
 # Create your models here.
-#database 
 
 class Admin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -123,15 +122,6 @@ class Order(models.Model):
     def __str__(self):
         return "Order: " + str(self.id)
 
-# class Review(models.Model):
-#     user = models.ForeignKey(Customer, models.CASCADE)
-#     food = models.ForeignKey(Food, models.CASCADE)
-#     comment = models.TextField(max_length=250)
-#     rate = models.IntegerField(default=0)
-#     created_at = models.DateTimeField(auto_now_add=True)
-
-#     def __str__(self):
-#         return str(self.id)
 
 class ReviewRating(models.Model):
     customer = models.ForeignKey(Customer, models.CASCADE)
@@ -148,3 +138,11 @@ class ReviewRating(models.Model):
         return self.subject
 
 
+class Ingredients(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    cost_price = models.PositiveIntegerField()
+    stock_level = models.PositiveIntegerField(default=0)
+    def __str__(self):
+        return self.title
